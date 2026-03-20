@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MAISON NOIR — Fine Dining</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f5ede0;
+    --dark: #0d0b08;
+    --dark2: #16130e;
+    --dark3: #1f1a12;
+    --text-muted: #8a7a62;
+    --border: rgba(201,168,76,0.2);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+  }
+  body:hover .cursor-ring { opacity: 1; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(13,11,8,0.95) 0%, transparent 100%);
+    transition: all 0.4s;
+  }
+  nav.scrolled {
+    padding: 16px 60px;
+    background: rgba(13,11,8,0.97);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    transition: all 0.3s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+  .nav-reserve {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 28px;
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.3s;
+  }
+  .nav-reserve:hover { background: var(--gold); color: var(--dark); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 50%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .hero-img-wrap {
+    position: absolute;
+    right: -20px; top: 0; bottom: 0;
+    width: 55%;
+    overflow: hidden;
+  }
+  .hero-img-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, var(--dark) 0%, rgba(13,11,8,0.3) 50%, transparent 100%);
+    z-index: 1;
+  }
+  .hero-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.55) saturate(0.8);
+    transform: scale(1.05);
+    animation: slowZoom 20s ease-in-out infinite alternate;
+  }
+  @keyframes slowZoom {
+    from { transform: scale(1.05); }
+    to { transform: scale(1.12); }
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding-left: 10%;
+    max-width: 650px;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-badge::before, .hero-badge::after {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(64px, 7vw, 108px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -1px;
+    margin-bottom: 28px;
+  }
+  .hero-title span { display: block; overflow: hidden; }
+  .hero-title .word {
+    display: block;
+    opacity: 0;
+    transform: translateY(100%);
+    animation: slideUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .hero-title .word:nth-child(1) { animation-delay: 0.4s; }
+  .hero-title .word:nth-child(2) { animation-delay: 0.55s; font-style: italic; color: var(--gold-light); }
+  .hero-title .word:nth-child(3) { animation-delay: 0.7s; }
+  .hero-sub {
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    line-height: 2;
+    max-width: 360px;
+    margin-bottom: 52px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+  .hero-actions {
+    display: flex; align-items: center; gap: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.2s forwards;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 16px 44px;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: none;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.15);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-ghost {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0.6;
+    transition: all 0.3s;
+  }
+  .btn-ghost:hover { opacity: 1; color: var(--gold); }
+  .btn-ghost svg { transition: transform 0.3s; }
+  .btn-ghost:hover svg { transform: translateX(4px); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px; left: 10%;
+    display: flex; align-items: center; gap: 16px;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    opacity: 0;
+    animation: fadeUp 0.8s 1.5s forwards;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .hero-stat-strip {
+    position: absolute;
+    right: 60px; bottom: 60px;
+    display: flex; flex-direction: column; gap: 20px;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.4s forwards;
+  }
+  .hero-stat { text-align: right; }
+  .hero-stat .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .hero-stat .label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(100%); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    overflow: hidden;
+    background: var(--gold);
+    padding: 14px 0;
+    border-top: 1px solid rgba(201,168,76,0.3);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 30s linear infinite;
+    gap: 0;
+  }
+  .marquee-item {
+    display: flex; align-items: center; gap: 28px;
+    padding: 0 28px;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--dark);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .marquee-dot { width: 5px; height: 5px; background: var(--dark); border-radius: 50%; opacity: 0.4; }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTION COMMONS */
+  section { padding: 120px 10%; }
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 9px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .section-tag::before {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 300;
+    line-height: 1.05;
+    margin-bottom: 24px;
+  }
+  .section-title em { font-style: italic; color: var(--gold-light); }
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ABOUT */
+  .about { background: var(--dark2); }
+  .about-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .about-img-wrap {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+  }
+  .about-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7) saturate(0.85);
+    transition: transform 0.8s ease;
+  }
+  .about-img-wrap:hover img { transform: scale(1.04); }
+  .about-img-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(to top, var(--dark2), transparent);
+  }
+  .about-accent {
+    position: absolute;
+    top: -20px; left: -20px;
+    width: 120px; height: 120px;
+    border: 1px solid var(--border);
+    z-index: -1;
+  }
+  .about-text { padding: 20px 0; }
+  .about-text p {
+    font-size: 15px;
+    line-height: 2;
+    color: rgba(245,237,224,0.65);
+    margin-bottom: 24px;
+  }
+  .about-text p strong { color: var(--cream); font-weight: 400; }
+  .about-divider {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    margin: 36px 0;
+    opacity: 0.5;
+  }
+  .about-award {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    background: rgba(201,168,76,0.04);
+  }
+  .award-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+  .award-info span {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .award-info p { font-size: 13px; color: var(--cream); }
+
+  /* MENU */
+  .menu { background: var(--dark); }
+  .menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+  }
+  .menu-tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .menu-tab {
+    padding: 12px 28px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: none;
+    transition: all 0.3s;
+    border-bottom: 1px solid transparent;
+    margin-bottom: -1px;
+  }
+  .menu-tab.active, .menu-tab:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+  }
+  .menu-card {
+    background: var(--dark2);
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    group: true;
+    cursor: none;
+  }
+  .menu-card-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.65) saturate(0.8);
+    transition: all 0.6s ease;
+  }
+  .menu-card:hover .menu-card-img {
+    filter: brightness(0.8) saturate(1);
+    transform: scale(1.06);
+  }
+  .menu-card-body {
+    padding: 24px 28px 28px;
+  }
+  .menu-card-tag {
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .menu-card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .menu-card-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .menu-card-footer {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .menu-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--gold);
+    font-weight: 300;
+  }
+  .menu-allergen {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+  }
+
+  /* EXPERIENCE */
+  .experience {
+    background: var(--dark3);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 0;
+    min-height: 70vh;
+  }
+  .exp-visual {
+    position: relative;
+    overflow: hidden;
+  }
+  .exp-visual img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5) saturate(0.7);
+  }
+  .exp-visual::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, transparent 60%, var(--dark3) 100%);
+  }
+  .exp-content {
+    padding: 100px 80px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .exp-list { list-style: none; margin-top: 40px; }
+  .exp-list li {
+    display: flex; align-items: flex-start; gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .exp-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    color: var(--gold);
+    opacity: 0.4;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 40px;
+  }
+  .exp-info h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .exp-info p { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--dark); padding: 100px 10%; }
+  .testimonials-header { text-align: center; margin-bottom: 72px; }
+  .testimonials-header .section-tag { justify-content: center; }
+  .testimonials-header .section-tag::before { display: none; }
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .testi-card {
+    background: var(--dark2);
+    padding: 40px 36px;
+    border: 1px solid var(--border);
+    position: relative;
+    transition: all 0.4s;
+  }
+  .testi-card:hover {
+    border-color: rgba(201,168,76,0.5);
+    transform: translateY(-4px);
+  }
+  .testi-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    color: var(--gold);
+    opacity: 0.25;
+    line-height: 1;
+    margin-bottom: -16px;
+  }
+  .testi-text {
+    font-size: 14px;
+    line-height: 2;
+    color: rgba(245,237,224,0.75);
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+  .testi-author {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .testi-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    filter: grayscale(30%);
+  }
+  .testi-name {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 2px;
+  }
+  .testi-role { font-size: 10px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+  .stars { color: var(--gold); font-size: 12px; margin-bottom: 16px; letter-spacing: 3px; }
+
+  /* RESERVATION */
+  .reservation {
+    background: var(--dark2);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 0;
+    min-height: 80vh;
+  }
+  .res-img {
+    position: relative;
+    overflow: hidden;
+  }
+  .res-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.45) saturate(0.7);
+    transition: transform 0.8s ease;
+  }
+  .res-img:hover img { transform: scale(1.04); }
+  .res-img::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, transparent 50%, var(--dark2) 100%);
+  }
+  .res-form-wrap {
+    padding: 100px 80px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .res-form { margin-top: 40px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-group { display: flex; flex-direction: column; }
+  .form-group label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .form-group input, .form-group select {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    padding: 14px 16px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.3s;
+    appearance: none;
+    cursor: none;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--gold);
+  }
+  .form-group input::placeholder { color: rgba(245,237,224,0.2); }
+  .form-group select option { background: var(--dark2); }
+  .form-full { margin-bottom: 16px; }
+  .res-btn {
+    margin-top: 32px;
+    width: 100%;
+    background: var(--gold);
+    border: none;
+    color: var(--dark);
+    padding: 18px;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: none;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .res-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.15);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .res-btn:hover::before { transform: scaleX(1); }
+
+  /* HOURS STRIP */
+  .hours-strip {
+    background: var(--dark3);
+    padding: 60px 10%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .hours-item {
+    padding: 40px 40px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .hours-item:last-child { border-right: none; }
+  .hours-day {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .hours-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    padding: 80px 10% 40px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    padding-bottom: 60px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .footer-brand .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: 6px;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .footer-brand p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.9;
+    max-width: 260px;
+  }
+  .footer-col h5 {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+  .footer-col a, .footer-col p {
+    display: block;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 12px;
+    transition: color 0.3s;
+    line-height: 1.7;
+  }
+  .footer-col a:hover { color: var(--cream); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-copy { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; }
+  .footer-social { display: flex; gap: 20px; }
+  .footer-social a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .footer-social a:hover { color: var(--gold); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 24px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links, .nav-reserve { display: none; }
+    section { padding: 80px 6%; }
+    .about-inner { grid-template-columns: 1fr; gap: 48px; }
+    .menu-grid { grid-template-columns: 1fr; }
+    .menu-header { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .experience { grid-template-columns: 1fr; min-height: auto; }
+    .exp-visual { height: 300px; }
+    .exp-content { padding: 60px 6%; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .reservation { grid-template-columns: 1fr; }
+    .res-img { height: 300px; }
+    .res-form-wrap { padding: 60px 6%; }
+    .hours-strip { grid-template-columns: 1fr 1fr; padding: 40px 6%; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .hero-img-wrap { width: 100%; opacity: 0.3; }
+    .hero-content { padding-left: 6%; }
+    .hero-stat-strip { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">MAISON NOIR</a>
+  <ul class="nav-links">
+    <li><a href="#about">Our Story</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#reservation">Reserve</a></li>
+  </ul>
+  <button class="nav-reserve" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">Reserve a Table</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-img-wrap">
+    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=85" alt="Fine dining"/>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">Est. 2009 · Paris, France</div>
+    <h1 class="hero-title">
+      <span><span class="word">Where</span></span>
+      <span><span class="word">Flavor</span></span>
+      <span><span class="word">Becomes Art</span></span>
+    </h1>
+    <p class="hero-sub">A journey through the finest French-Asian fusion cuisine, crafted with precision, passion, and the freshest seasonal ingredients.</p>
+    <div class="hero-actions">
+      <a href="#menu" class="btn-primary">Explore Menu</a>
+      <a href="#reservation" class="btn-ghost">
+        Reserve a Table
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+  <div class="hero-stat-strip">
+    <div class="hero-stat">
+      <div class="num">★ 3</div>
+      <div class="label">Michelin Stars</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">15+</div>
+      <div class="label">Years of Craft</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">98%</div>
+      <div class="label">Guest Satisfaction</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee">
+    <div class="marquee-item">Fine Dining <span class="marquee-dot"></span></div>
+    <div class="marquee-item">French-Asian Fusion <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Seasonal Menu <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Wine Pairing <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Private Events <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Chef's Table <span class="marquee-dot"></span></div>
+    <div class="marquee-item">3 Michelin Stars <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Open Since 2009 <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Fine Dining <span class="marquee-dot"></span></div>
+    <div class="marquee-item">French-Asian Fusion <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Seasonal Menu <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Wine Pairing <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Private Events <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Chef's Table <span class="marquee-dot"></span></div>
+    <div class="marquee-item">3 Michelin Stars <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Open Since 2009 <span class="marquee-dot"></span></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-img-wrap reveal">
+      <div class="about-accent"></div>
+      <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=800&q=85" alt="Chef"/>
+    </div>
+    <div class="about-text reveal">
+      <div class="section-tag">Our Story</div>
+      <h2 class="section-title">Born from <em>Passion,</em><br>Refined by Time</h2>
+      <p>Founded by <strong>Chef Aurélien Voss</strong> in 2009, Maison Noir was born from a singular obsession — to create food that tells stories. Every dish is a conversation between the bold spices of Southeast Asia and the classical techniques of French gastronomy.</p>
+      <p>Our kitchen sources exclusively from farmers within 100 kilometers of Paris, ensuring that each plate carries the <strong>authentic terroir of its season</strong>. We believe food is not consumed; it is experienced.</p>
+      <div class="about-divider"></div>
+      <div class="about-award">
+        <div class="award-icon">⭐</div>
+        <div class="award-info">
+          <span>Awarded 2023</span>
+          <p>Three Michelin Stars · World's 50 Best Restaurants #8</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu" id="menu">
+  <div class="menu-header reveal">
+    <div>
+      <div class="section-tag">Culinary Journey</div>
+      <h2 class="section-title">Our <em>Signature</em> Menu</h2>
+    </div>
+    <div class="menu-tabs">
+      <button class="menu-tab active">Starters</button>
+      <button class="menu-tab">Mains</button>
+      <button class="menu-tab">Desserts</button>
+    </div>
+  </div>
+  <div class="menu-grid reveal">
+    <div class="menu-card">
+      <img class="menu-card-img" src="https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&q=80" alt="Dish 1"/>
+      <div class="menu-card-body">
+        <div class="menu-card-tag">Signature Starter</div>
+        <div class="menu-card-name">Miso Black Truffle Velouté</div>
+        <div class="menu-card-desc">White miso, Périgord truffle, shaved aged parmesan, yuzu foam, micro herbs</div>
+        <div class="menu-card-footer">
+          <div class="menu-price">€48</div>
+          <div class="menu-allergen">GF · V</div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card">
+      <img class="menu-card-img" src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80" alt="Dish 2"/>
+      <div class="menu-card-body">
+        <div class="menu-card-tag">Chef's Favourite</div>
+        <div class="menu-card-name">Wagyu Tataki, Dashi Butter</div>
+        <div class="menu-card-desc">A5 Wagyu, katsuobushi dashi beurre blanc, pickled shallots, crispy capers</div>
+        <div class="menu-card-footer">
+          <div class="menu-price">€76</div>
+          <div class="menu-allergen">GF</div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-card">
+      <img class="menu-card-img" src="https://images.unsplash.com/photo-1579631542720-3a87824fff86?w=600&q=80" alt="Dish 3"/>
+      <div class="menu-card-body">
+        <div class="menu-card-tag">Seasonal Dessert</div>
+        <div class="menu-card-name">Sakura Panna Cotta</div>
+        <div class="menu-card-desc">Cherry blossom cream, lychee granita, sesame praline, raspberry coulis</div>
+        <div class="menu-card-footer">
+          <div class="menu-price">€32</div>
+          <div class="menu-allergen">V · GF</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div class="exp-visual">
+    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80" alt="Restaurant interior"/>
+  </div>
+  <div class="exp-content reveal">
+    <div class="section-tag">The Maison Experience</div>
+    <h2 class="section-title">More Than <em>a Meal</em></h2>
+    <ul class="exp-list">
+      <li>
+        <div class="exp-num">01</div>
+        <div class="exp-info">
+          <h4>Chef's Tasting Menu</h4>
+          <p>A 9-course narrative journey curated by Chef Aurélien, with optional wine pairing from our 3,000-bottle cellar.</p>
+        </div>
+      </li>
+      <li>
+        <div class="exp-num">02</div>
+        <div class="exp-info">
+          <h4>The Chef's Table</h4>
+          <p>Dine within the kitchen itself. Watch each dish crafted in real-time — the most intimate dining experience we offer.</p>
+        </div>
+      </li>
+      <li>
+        <div class="exp-num">03</div>
+        <div class="exp-info">
+          <h4>Private Dining Salons</h4>
+          <p>Three exclusive rooms available for celebrations, corporate dinners, or intimate gatherings of up to 22 guests.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-header reveal">
+    <div class="section-tag">Guest Reviews</div>
+    <h2 class="section-title">Voices from Our <em>Table</em></h2>
+  </div>
+  <div class="testi-grid reveal">
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">An evening that redefined what I believed dining could be. The Wagyu Tataki was transcendent — I still think about it weeks later.</p>
+      <div class="testi-author">
+        <img class="testi-avatar" src="https://i.pravatar.cc/100?img=47" alt="Guest"/>
+        <div>
+          <div class="testi-name">Sophie Marchand</div>
+          <div class="testi-role">Paris, France</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">The chef's table was a theatrical masterpiece. We watched art being made. The truffle velouté will live in my memory forever.</p>
+      <div class="testi-author">
+        <img class="testi-avatar" src="https://i.pravatar.cc/100?img=32" alt="Guest"/>
+        <div>
+          <div class="testi-name">James Whitmore</div>
+          <div class="testi-role">London, UK</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">Every course told a story. The wine pairings were inspired. Maison Noir is, without doubt, the finest restaurant I have ever visited.</p>
+      <div class="testi-author">
+        <img class="testi-avatar" src="https://i.pravatar.cc/100?img=12" alt="Guest"/>
+        <div>
+          <div class="testi-name">Hiroshi Tanaka</div>
+          <div class="testi-role">Tokyo, Japan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOURS STRIP -->
+<div class="hours-strip">
+  <div class="hours-item reveal">
+    <div class="hours-day">Monday – Tuesday</div>
+    <div class="hours-time">Closed</div>
+  </div>
+  <div class="hours-item reveal">
+    <div class="hours-day">Wednesday – Thursday</div>
+    <div class="hours-time">18:00 – 23:00</div>
+  </div>
+  <div class="hours-item reveal">
+    <div class="hours-day">Friday – Saturday</div>
+    <div class="hours-time">12:00 – 15:00 · 18:00 – 23:30</div>
+  </div>
+  <div class="hours-item reveal">
+    <div class="hours-day">Sunday</div>
+    <div class="hours-time">12:00 – 16:00</div>
+  </div>
+</div>
+
+<!-- RESERVATION -->
+<div class="reservation" id="reservation">
+  <div class="res-img">
+    <img src="https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&q=80" alt="Restaurant table"/>
+  </div>
+  <div class="res-form-wrap reveal">
+    <div class="section-tag">Reserve a Table</div>
+    <h2 class="section-title">Begin Your <em>Evening</em></h2>
+    <form class="res-form" onsubmit="handleReservation(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="Aurélien"/>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Voss"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date"/>
+        </div>
+        <div class="form-group">
+          <label>Time</label>
+          <select>
+            <option>18:00</option>
+            <option>18:30</option>
+            <option>19:00</option>
+            <option>19:30</option>
+            <option>20:00</option>
+            <option>20:30</option>
+            <option>21:00</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row form-full">
+        <div class="form-group">
+          <label>Guests</label>
+          <select>
+            <option>1 Guest</option>
+            <option>2 Guests</option>
+            <option>3 Guests</option>
+            <option>4 Guests</option>
+            <option>5+ Guests</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Experience</label>
+          <select>
+            <option>À la Carte</option>
+            <option>Chef's Tasting (9 course)</option>
+            <option>Chef's Table</option>
+            <option>Private Dining</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row form-full">
+        <div class="form-group" style="grid-column: 1/-1">
+          <label>Email</label>
+          <input type="email" placeholder="your@email.com"/>
+        </div>
+      </div>
+      <button type="submit" class="res-btn" id="resBtn">Confirm Reservation</button>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo">MAISON NOIR</span>
+      <p>A culinary destination where French classical tradition meets the vibrant flavors of Asia. Three stars. One unforgettable evening.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Navigate</h5>
+      <a href="#about">Our Story</a>
+      <a href="#menu">Menu</a>
+      <a href="#experience">Experience</a>
+      <a href="#reservation">Reservations</a>
+    </div>
+    <div class="footer-col">
+      <h5>Location</h5>
+      <p>14 Rue de la Paix</p>
+      <p>75002 Paris, France</p>
+      <p>+33 1 42 66 82 00</p>
+      <a href="mailto:contact@maisonnoir.fr">contact@maisonnoir.fr</a>
+    </div>
+    <div class="footer-col">
+      <h5>Enquiries</h5>
+      <a href="#">Private Events</a>
+      <a href="#">Corporate Dining</a>
+      <a href="#">Press & Media</a>
+      <a href="#">Gift Vouchers</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 Maison Noir. All rights reserved.</p>
+    <div class="footer-social">
+      <a href="#">Instagram</a>
+      <a href="#">Facebook</a>
+      <a href="#">TripAdvisor</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let rx = 0, ry = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX; cy = e.clientY;
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+  });
+  function animRing() {
+    rx += (cx - rx) * 0.12;
+    ry += (cy - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        const delay = [...reveals].indexOf(e.target) % 3 * 120;
+        setTimeout(() => e.target.classList.add('visible'), delay);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => obs.observe(r));
+
+  // Menu tabs
+  const tabs = document.querySelectorAll('.menu-tab');
+  const menuData = {
+    Starters: [
+      { img: 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&q=80', tag: 'Signature Starter', name: 'Miso Black Truffle Velouté', desc: 'White miso, Périgord truffle, shaved aged parmesan, yuzu foam, micro herbs', price: '€48', label: 'GF · V' },
+      { img: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80', tag: "Chef's Favourite", name: 'Wagyu Tataki, Dashi Butter', desc: 'A5 Wagyu, katsuobushi dashi beurre blanc, pickled shallots, crispy capers', price: '€76', label: 'GF' },
+      { img: 'https://images.unsplash.com/photo-1579631542720-3a87824fff86?w=600&q=80', tag: 'Garden Starter', name: 'Sakura Panna Cotta', desc: 'Cherry blossom cream, lychee granita, sesame praline, raspberry coulis', price: '€32', label: 'V · GF' }
+    ],
+    Mains: [
+      { img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80', tag: 'Main Course', name: 'Duck Confit, Sansho Jus', desc: 'Free-range duck, sansho pepper sauce, parsnip purée, braised endive, microgreens', price: '€68', label: 'GF' },
+      { img: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80', tag: 'Signature Main', name: 'Sea Bass en Croûte', desc: 'Wild sea bass, brioche crust, nori butter, dashi beurre blanc, lotus root chips', price: '€82', label: 'DF' },
+      { img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80', tag: 'Vegetarian', name: 'Truffle Mushroom Risotto', desc: 'Arborio, porcini, Périgord truffle oil, aged parmigiano-reggiano, crispy sage', price: '€54', label: 'V · GF' }
+    ],
+    Desserts: [
+      { img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80', tag: 'Pastry', name: 'Matcha Soufflé', desc: 'Ceremonial grade matcha, white chocolate ganache, crème anglaise, yuzu zest', price: '€28', label: 'V · GF' },
+      { img: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=80', tag: 'Signature Dessert', name: 'Dark Chocolate Sphere', desc: 'Valrhona 72%, hazelnut praline, salted caramel, raspberry gel, gold leaf', price: '€34', label: 'V · GF' },
+      { img: 'https://images.unsplash.com/photo-1579631542720-3a87824fff86?w=600&q=80', tag: 'Seasonal', name: 'Sakura Panna Cotta', desc: 'Cherry blossom cream, lychee granita, sesame praline, raspberry coulis', price: '€32', label: 'V · GF' }
+    ]
+  };
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const key = tab.textContent.trim().replace(/\s+/, '');
+      const mapped = { 'Starters': 'Starters', 'Mains': 'Mains', 'Desserts': 'Desserts' };
+      const data = menuData[tab.textContent.trim()] || menuData.Starters;
+      const grid = document.querySelector('.menu-grid');
+      grid.style.opacity = '0';
+      grid.style.transform = 'translateY(16px)';
+      setTimeout(() => {
+        grid.innerHTML = data.map(d => `
+          <div class="menu-card">
+            <img class="menu-card-img" src="${d.img}" alt="${d.name}"/>
+            <div class="menu-card-body">
+              <div class="menu-card-tag">${d.tag}</div>
+              <div class="menu-card-name">${d.name}</div>
+              <div class="menu-card-desc">${d.desc}</div>
+              <div class="menu-card-footer">
+                <div class="menu-price">${d.price}</div>
+                <div class="menu-allergen">${d.label}</div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+        grid.style.transition = 'all 0.4s ease';
+        grid.style.opacity = '1';
+        grid.style.transform = 'translateY(0)';
+      }, 200);
+    });
+  });
+
+  // Reservation form
+  function handleReservation(e) {
+    e.preventDefault();
+    const btn = document.getElementById('resBtn');
+    btn.textContent = 'Reservation Confirmed ✓';
+    btn.style.background = '#2d6a4f';
+    btn.style.color = '#d8f3dc';
+    btn.style.letterSpacing = '2px';
+    setTimeout(() => {
+      btn.textContent = 'Confirm Reservation';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.letterSpacing = '';
+    }, 4000);
+  }
+</script>
+</body>
+</html>
